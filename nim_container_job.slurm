@@ -9,4 +9,4 @@
 
 module load apptainer
 
-apptainer run --nv llama2-nim.sif
+apptainer run --nv llama3-nim.sif

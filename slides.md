@@ -36,7 +36,7 @@ paginate: true
 ## Pull the Container
 
 ```bash
-apptainer pull llama2-nim.sif docker://nvcr.io/nvidia/nim/llama2:latest
+apptainer pull llama3-nim.sif docker://nvcr.io/nim/meta/llama-3.3-70b-instruct:latest
 ```
 
 ---
@@ -44,7 +44,7 @@ apptainer pull llama2-nim.sif docker://nvcr.io/nvidia/nim/llama2:latest
 ## Run the Container
 
 ```bash
-apptainer run --nv llama2-nim.sif
+apptainer run --nv llama3-nim.sif
 ```
 
 ---
