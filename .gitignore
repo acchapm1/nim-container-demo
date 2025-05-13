@@ -1,0 +1,6 @@
+# container images
+*.sif
+
+data/
+llama2/
+llama3/
