@@ -1,7 +1,8 @@
 ---
-marp: true
-theme: default
-paginate: true
+theme: ./assets/catppuccin-mocha.json
+author: Alan Chapman
+date: MMMM dd, YYYY
+paging: Slide %d / %d
 ---
 
 # Accelerating AI Workflows on HPC with NVIDIA NIM and Apptainer
