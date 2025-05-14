@@ -10,9 +10,11 @@
 #SBATCH -o out.%j.out
 #SBATCH -e err.%j.err
 
-readonly currentDir="$(pwd)"
-readonly cacheDir="$currentDir/nim-cache"
-readonly hfDir="$currentDir/huggingface"
+readonly currentDir="/scratch/acchapm1/Nvidia/nim"
+readonly dataDir="$currentDir/data"
+readonly cacheDir="$dataDir/nim-cache"
+readonly hfDir="$dataDir/huggingface"
+readonly img="$dataDir/llama3.3.sif"
 
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
