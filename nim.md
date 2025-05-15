@@ -1,14 +1,23 @@
 ---
 theme:
+  name: catppuccin-mocha
   override:
     code:
       alignment: left
       background: false
+  footer:
+    style: template
+    left: "My **name** is {author}"
+    center: "_@myhandle_"
+    right: "{current_slide} / {total_slides}"
+    height: 3
 title: Accelerating AI Workflows on HPC with NVIDIA NIM and Apptainer
 author: Alan Chapman
 ---
 
-# Why Apptainer on HPC?
+
+
+🚀 Why Apptainer on HPC?
 ===
 
 - Easy to use
