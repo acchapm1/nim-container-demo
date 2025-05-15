@@ -1,4 +1,5 @@
 # container images
 *.sif
-
-data/
+*.npy
+data*
+.cache*
