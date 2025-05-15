@@ -4,18 +4,31 @@ theme:
     code:
       alignment: left
       background: false
-title: Simplifying Research Workflows with Containers on Supercomputers
+title: Accelerating AI Workflows on HPC with NVIDIA NIM and Apptainer
 author: Alan Chapman
 ---
 
-Basic container commands with Apptainer - pull a container
+# Why Apptainer on HPC?
+===
+
+- Easy to use
+- GPU optimized
+- Easy to deploy
+- Easy to manage
+- Rootless, secure, supports GPUs
+- Compatible with Slurm and shared environments
+- Docker alternative for clusters
+
+<!-- end_slide -->
+
+# Apptainer - pull a container
 ===
 
 Apptainer is a tool for creating and managing containers on ASU supercomputers. It allows users to create, manage, and run containers with ease.
 
 ```bash
 # Create a new container and name it lolcow.sif
- apptainer pull lolcow.sif shub://GodloveD/lolcow
+apptainer pull lolcow.sif shub://GodloveD/lolcow
 ```
 
 * apptainer pull 
@@ -27,23 +40,19 @@ Apptainer is a tool for creating and managing containers on ASU supercomputers. 
 
 <!-- end_slide -->
 
-Basic container commands with Apptainer - run a container
+## Apptainer - run a container
 ===
 
-```bash +exec
-# Run the container
-#apptainer run  shub://GodloveD/lolcow
-ping google.com
-```
-* apptainer run
-  - Run a command inside the container without saving it locally
-
+# Run the container without pulling it first
 ```bash
+apptainer run  shub://GodloveD/lolcow
+```
 # Run a local container
+```bash
 apptainer run lolcow.sif
-
+```
 # output of running lolcow container
-apptainer run lolcow.sif
+```bash
  ___________________________________
 < Beware of low-flying butterflies. >
  -----------------------------------
@@ -54,141 +63,102 @@ apptainer run lolcow.sif
                 ||     ||
 ```
 
+<!-- end_slide -->
+
+
+## What is NVIDIA NIM?
+===
+
+- Pretrained inference microservices
+- Hosted on NVIDIA NGC
+- Designed for easy deployment, GPU optimized
 
 <!-- end_slide -->
 
-Building a container
+## Pulling Container from Nvidia NGC 
 ===
+
+Setup:
+```bash
+export APPTAINER_DOCKER_USERNAME='$oauthtoken'
+export APPTAINER_DOCKER_PASSWORD='<your_ngc_api_key>'
+```
+Command:
+```bash
+apptainer pull llama3-nim.sif docker://nvcr.io/nim/meta/llama-3.3-70b-instruct:latest
+```
+
+This is a large container, so it will take a while to pull.  I have previously pulled it to Sol. 
+
+<!-- end_slide -->
+
+## Llama 3.3 70B Instruct
+===
+
+- 1.2T parameters
+- 1.5B context window
+- 100K tokens
+- 100K vocab
+
+to run the container:
 
 ```bash
-Bootstrap: docker
-From: alpine:3.21.3
-
-
-%runscript
-  exec cat /etc/os-release
+apptainer run llama3-nim.sif
 ```
-* Bootstrap: docker
-  - The base image to use for the container, in this case, Alpine Linux
-* From: alpine:3.21.3
-  - The specific version of the base image to use
-* %runscript
-  - The script to run when the container is executed
-* exec cat /etc/os-release
-  - The command to run inside the container, in this case, printing the OS release information
-
+Fails due to containers being immutable and Llama 3.3 needs to write to a cache directory.
 
 <!-- end_slide -->
 
-Building a container - run the container
+## Llama 3.3 70B Instruct - Running the container
 ===
-```bash
-# Run the container
-apptainer run alpine.sif
-```
-
-```bash 
-# Output of running the container
-NAME="Alpine Linux"
-ID=alpine
-VERSION_ID=3.21.3
-PRETTY_NAME="Alpine Linux v3.21"
-HOME_URL="https://alpinelinux.org/"
-BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
-```
-
-<!-- end_slide -->
-
-Running a container against and Nvidia GPU - PyTorch
-===
- 
-```bash
-#!/bin/bash
-#SBATCH --job-name=dockerhub
-#SBATCH --output=dhout-%j.out
-#SBATCH --error=dherr-%j.err
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=16G
-#SBATCH --time=00:15:00
-#SBATCH -p htc
-#SBATCH -q public
-#SBATCH --gres=gpu:a100:1
-
-# env variables
-export localData=$(pwd)/data
-
-# Run the training inside the container
-apptainer exec --nv \
-        -B $localData:/data \
-        docker/pyt2.6-dev.sif \
-    python3 code/train.py
-```
-
-<!-- end_slide -->
-
-
-Running a container against and Nvidia GPU - Parabricks
-===
-
+Here is a modified version of the container that will write to a cache directory.
 
 ```bash
 #!/bin/bash
-#SBATCH -p general
-#SBATCH -q public
-#SBATCH --mem=128G
-#SBATCH -t 0-00:30:00
-#SBATCH -G a100:1
 
-export currentdir=$(pwd)
-export jobdir=$currentdir/a100_out
-mkdir -p $jobdir
+readonly currentDir="$(pwd)"
+readonly dataDir="$currentDir/data"
+readonly cacheDir="$dataDir/nim-cache"
+readonly hfDir="$dataDir/huggingface"
+readonly img="$dataDir/llama3.nim.sif"
 
-apptainer exec --nv parabricks.sif pbrun fq2bam \
-         --num-gpus 1 \
-         --ref parabricks_sample/Ref/Homo_sapiens_assembly38.fasta \
-         --in-fq parabricks_sample/Data/sample_1.fq.gz parabricks_sample/Data/sample_2.fq.gz \
-         --out-bam $jobdir/output.bam
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+export NGC_API_KEY=$(cat ~/.ngc-api-key)
+
+apptainer run \
+        --nv \
+        --env NGC_API_KEY=$NGC_API_KEY \
+        --bind $cacheDir:/opt/nim/.cache \
+        $img
 ```
+
+
+<!-- end_slide -->
+
+## Llama 3.3 70B Instruct - Live demo 
+===
+
 
 <!-- end_slide -->
 
 
-Running a container against and Nvidia GPU - Alphafold 3
+## Evo 2 40B
 ===
+
+- 405B parameters
+- 1.5B context window
+- 100K tokens
+- 100K vocab
+
+to run the container:
+
 ```bash
-#!/bin/bash
-#SBATCH -N 1
-#SBATCH -c 16
-#SBATCH -p htc
-#SBATCH -q public
-#SBATCH -t 0-00:30:00
-#SBATCH -G a100:1
-
-export currentDir=$(pwd)
-export PYTHONNOUSERSITE=True
-export PARAMS=/data/alphafold/alphafold3/paramaters
-export USER_DIR=/scratch/speyer/alphafold3
-export DB=/data/alphafold/alphafold3/db_20250131
-export CONTAINER=$currentDir/af3.sif
-
-apptainer exec --nv \
-     --bind $USsliER_DIR/af_input:/root/af_input \
-     --bind $USER_DIR/af_output:/root/af_output \
-     --bind $PARAMS:/root/models \
-     --bind $DB:/root/public_databases \
-     $CONTAINER \
-     python /app/alphafold/run_alphafold.py \
-     --json_path=/root/af_input/input.json \
-     --model_dir=/root/models \
-     --db_dir=/root/public_databases \
-     --output_dir=/root/af_output
+apptainer run evo2-nim.sif
 ```
+Again this will fail due to the container being immutable and Evo 2 needs to write to a cache directory.
 
 <!-- end_slide -->
-
-Containers on Sol 
-===
 
 ## How to find public containers
 ```bash
