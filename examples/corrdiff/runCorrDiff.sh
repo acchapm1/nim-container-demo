@@ -1,9 +1,13 @@
-export LOCAL_NIM_CACHE=$(pwd)/.cache/nim
-mkdir -p "$LOCAL_NIM_CACHE"
-export LOCAL_NIM_WORKSPACE=$(pwd)/.cache/workspace
-mkdir -p "$LOCAL_NIM_WORKSPACE"
+#!/bin/bash
 
 export NGC_API_KEY=$(cat ~/.ngc-api-key)
+export LOCAL_NIM_CACHE="/scratch/acchapm1/.cache/corrdiff"
+export LOCAL_NIM_WORKSPACE="/scratch/acchapm1/.cache/corrdiff/workspace"
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+mkdir -p "$LOCAL_NIM_WORKSPACE"
+mkdir -p "$LOCAL_NIM_CACHE"
 
 rm -Rf "$LOCAL_NIM_WORKSPACE/*"
 
