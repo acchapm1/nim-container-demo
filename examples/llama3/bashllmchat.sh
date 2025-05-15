@@ -3,7 +3,7 @@
 # Default values
 FORMAT="markdown"
 OUTPUT_FILE=""
-DEFAULT_PROMPT="Who is Sparky the Sun Devil?"
+DEFAULT_PROMPT="Write a poem about Sparky the Sun Devil."
 
 # Usage function
 usage() {

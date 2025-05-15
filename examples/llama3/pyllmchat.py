@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument(
         "-p", "--prompt",
         help="Prompt to send to the LLM. If omitted, shows help for this script.",
-        default="Who is Sparky the Sun Devil?"
+        default="Write a poem about Sparky the Sun Devil"
     )
     parser.add_argument("-f", "--format", choices=["json", "markdown"], default="markdown", help="Output format.")
     parser.add_argument("-o", "--output", help="Save output to a file.")
