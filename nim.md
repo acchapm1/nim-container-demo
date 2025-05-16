@@ -75,7 +75,7 @@ apptainer run lolcow.sif
 <!-- end_slide -->
 
 
-## What is NVIDIA NIM?
+What is NVIDIA NIM?
 ===
 
 - Pretrained inference microservices
