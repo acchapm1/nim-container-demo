@@ -15,8 +15,6 @@ title: Accelerating AI Workflows on HPC with NVIDIA NIM and Apptainer
 author: Alan Chapman
 ---
 
-
-
 🚀 Why Apptainer on HPC?
 ===
 
@@ -49,18 +47,18 @@ apptainer pull lolcow.sif shub://GodloveD/lolcow
 
 <!-- end_slide -->
 
-## Apptainer - run a container
+Apptainer - run a container
 ===
 
-# Run the container without pulling it first
+* Run the container without pulling it first
 ```bash
 apptainer run  shub://GodloveD/lolcow
 ```
-# Run a local container
+* Run a local container
 ```bash
 apptainer run lolcow.sif
 ```
-# output of running lolcow container
+* Output of running lolcow container
 ```bash
  ___________________________________
 < Beware of low-flying butterflies. >
@@ -75,19 +73,33 @@ apptainer run lolcow.sif
 <!-- end_slide -->
 
 
-## What is NVIDIA NIM?
+NVIDIA NIM Containers
 ===
 
-- Pretrained inference microservices
-- Hosted on NVIDIA NGC
-- Designed for easy deployment, GPU optimized
+NVIDIA NIM (NVIDIA Inference Microservices) are pre-built, optimized containers that expose 
+powerful AI models through simple REST APIs, making it easy to integrate AI into applications.
+Each NIM container is tailored for a specific model and task, including:
+- Large Language Models (LLMs)
+- Vision models
+- Speech models
+- Embedding models for retrieval-augmented generation (RAG)
+
+Built on NVIDIA Triton Inference Server and part of the NVIDIA AI Enterprise platform.
+
+
+
+
+This "everything in one box" approach eliminates configuration headaches and ensures models run 
+reliably across diverse infrastructure.
 
 <!-- end_slide -->
 
-## Pulling Container from Nvidia NGC 
+Nvidia NGC - Pulling Containers
 ===
 
 Setup:
+- Create an account on Nvidia NGC and generate an API key
+- Export the API key as an environment variable
 ```bash
 export APPTAINER_DOCKER_USERNAME='$oauthtoken'
 export APPTAINER_DOCKER_PASSWORD='<your_ngc_api_key>'
@@ -97,28 +109,23 @@ Command:
 apptainer pull llama3-nim.sif docker://nvcr.io/nim/meta/llama-3.3-70b-instruct:latest
 ```
 
-This is a large container, so it will take a while to pull.  I have previously pulled it to Sol. 
-
 <!-- end_slide -->
 
-## Llama 3.3 70B Instruct
+Nvidia NIM - Llama 3.3 70B Instruct
 ===
 
-- 1.2T parameters
-- 1.5B context window
-- 100K tokens
-- 100K vocab
+- Parameters: 70 billion
+- Context Window: Up to 128,000 tokens
+- Training Data: Over 15 trillion tokens
+- Training Techniques: Supervised Fine-Tuning (SFT) and Reinforcement Learning with Human Feedback (RLHF)
+- Inference Optimization: Accelerated by TensorRT-LLM for optimized performance on NVIDIA GPUs
+- Multilingual Support: Optimized for multilingual dialogue use cases
 
-to run the container:
 
-```bash
-apptainer run llama3-nim.sif
-```
-Fails due to containers being immutable and Llama 3.3 needs to write to a cache directory.
 
 <!-- end_slide -->
 
-## Llama 3.3 70B Instruct - Running the container
+Llama 3.3 70B Instruct - Running the container
 ===
 Here is a modified version of the container that will write to a cache directory.
 
