@@ -30,7 +30,7 @@ author: Alan Chapman
 
 <!-- end_slide -->
 
-# Apptainer - pull a container
+Apptainer - pull a container
 ===
 
 Apptainer is a tool for creating and managing containers on ASU supercomputers. It allows users to create, manage, and run containers with ease.
