@@ -4,3 +4,4 @@ This repository provides a demo on running NVIDIA NIM (Inference Microservice) c
 
 ...
 
+The tool I used to show slides in the terminal is Presenterm  https://github.com/mfontanini/presenterm
